@@ -29,6 +29,7 @@ public class Dungeon
             rooms.add(new Room(catalogue.getDescription(i), "room" + i));
         }
         rooms.add(new Room("Quitting room", "room20"));
+        rooms.add(new Room("Winning room", "room21"));
 
         rooms.get(0).setNorth(rooms.get(1));
         rooms.get(0).setSouth(rooms.get(20));
@@ -115,18 +116,13 @@ public class Dungeon
     {
         current = rooms.get(0);
         current = enter();
-        while (!current.equals(rooms.get(11)) && !current.equals(rooms.get(20)))
+        while (!current.equals(rooms.get(20)) && !current.equals(rooms.get(21)))
         {
             current = enter();
         }
-        if (current.equals(rooms.get(11)))
+        if (current.equals(rooms.get(21)))
         {
-            io.put("You enter a dark room with no windows. You feel a bit uncomfortable, trying to get your torch lit."
-                    + " Once you succeed, you are filled with expectation and a sense of victory by the sight that meets"
-                    + " you. An ornamented chest sits in the center of the room, and as you open it the contents glitter "
-                    + "in the light of your newly lit torch.\n\nYou have found the treasure.\n\nFor a long time now, your name"
-                    + " will appear in the lore of the local villages, being the first hero to ever return from The Abandoned"
-                    + " Castle");
+            io.put("You won the game.");
         } else
         {
             io.put("You are overwhelmed with fear and leave the castle.\nThank you for playing our game.");
@@ -136,10 +132,21 @@ public class Dungeon
     public Room enter()
     {
         io.put("\n");
+
+        if (current.equals(rooms.get(11)))
+        {
+            return checkCode();
+        }
+
         io.put(current.getDescription());
         io.put("\n\n");
         current.setVisited(true);
+        isHereGold();
         isHereAMonster();
+        if (player.getHealth() == 0)
+        {
+            return rooms.get(20);
+        }
         io.put("In which direction would you like to continue?");
         String s = io.get();
         s = s.toLowerCase();
@@ -153,6 +160,29 @@ public class Dungeon
 
     }
 
+    private Room checkCode()
+    {
+        io.put("The door is locked. However, you notice a curious looking field covered in dust just next to the handle."
+                + " It could be some kind of combination lock of five letters. You wonder what to enter...\n");
+        String code = io.get();
+        if (code.equalsIgnoreCase("ELENA"))
+        {
+            io.put("\nThe lock opens with a click, and you are able to open the door. It squeaks from the hinges after being locked"
+                    + " in place for centuries.\n\n"
+                    + "You enter a dark room with no windows. You feel a bit uncomfortable, trying to get your torch lit."
+                    + " Once you succeed, you are filled with expectation and a sense of victory by the sight that meets"
+                    + " you. An ornamented chest sits in the center of the room, and as you open it the contents glitter "
+                    + "in the light of your newly lit torch.\n\nYou have found the treasure.\n\nFor a long time now, your name"
+                    + " will appear in the lore of the local villages, being the first hero to ever return from The Abandoned"
+                    + " Castle\n\n");
+            return rooms.get(21);
+        } else
+        {
+            io.put("This is an incorrect combination. Maybe you should look around a bit more. You return to the master dinig room.\n");
+            return rooms.get(16);
+        }
+    }
+
     private Room response(String s)
     {
         while (s.equals("help"))
@@ -162,6 +192,13 @@ public class Dungeon
             s = io.get();
             s = s.toLowerCase();
         }
+//        while (s.equals("room"))
+//        {
+//            io.put(current.getDescription());
+//            io.put("In which direction would you like to continue?" + "\n");
+//            s = io.get();
+//            s = s.toLowerCase();
+//        }
         switch (s)
         {
             case "quit":
@@ -197,6 +234,7 @@ public class Dungeon
         io.put("\n");
         io.put("help - displays a list of possible commands" + "\n");
         io.put("quit - quits the game" + "\n");
+//        io.put("room - description of the current room");
         io.put("north - goes north from the current location (if available)" + "\n");
         io.put("south - goes south from the current location (if available)" + "\n");
         io.put("east - goes east from the current location (if available)" + "\n");
@@ -204,16 +242,17 @@ public class Dungeon
         io.put("\n");
 
     }
-    
+
     private void isHereAMonster()
     {
         int i;
-        i = (int)(Math.random()*3+1);
-        if (i==1)
+        i = (int) (Math.random() * 3 + 1);
+        if (i == 1 && !current.equals(rooms.get(0)))
         {
-            monsterEvent((int)(Math.random()*3+1));
+            monsterEvent((int) (Math.random() * 3 + 1));
         }
     }
+
     private void monsterEvent(int x)
     {
         switch (x)
@@ -222,39 +261,56 @@ public class Dungeon
             {
                 io.put("You hear a sizzling noise from the left. You quickly spin around, only to see an abnormously large rat moving towards you,"
                         + " hissing angrily.\n\n");
-                combat((int)(Math.random()*50+1));
+                combat((int) (Math.random() * 50 + 1));
                 break;
             }
             case 2:
             {
                 io.put("You only just have time to get a short view of you surroundings, before you are attacked by a vicious troll!\n\n");
-                combat((int)(Math.random()*50+1));
+                combat((int) (Math.random() * 50 + 1));
                 break;
             }
             case 3:
             {
                 io.put("An ominous rattling is heard from the far side of the premises. Before you even have the chance to look for a proper escape"
                         + " route, a skeleton is moving towards you surprisingly rapidly, weapon raised to attack.\n\n");
-                combat((int)(Math.random()*50+1));
+                combat((int) (Math.random() * 50 + 1));
                 break;
             }
-            
+
         }
     }
-    
+
     private void combat(int monsterHealth)
     {
-        io.put("You have no choice but to fight!\n");
+        io.put("You have no choice but to fight!\n\n");
         int playerHealth = player.getHealth();
-        playerHealth = playerHealth - monsterHealth/4;
+        playerHealth = playerHealth - monsterHealth / 4;
         player.setHealth(playerHealth);
-        io.put("The battle is over. Your health is now "+playerHealth+".\n");
+        if (player.getHealth() < 0)
+        {
+            player.setHealth(0);
+        }
+        io.put("The battle is over. Your health is now " + player.getHealth() + ".\n\n");
     }
 
     @Override
     public String toString()
     {
         return "Dungeon{" + "rooms=" + rooms + '}';
+    }
+
+    private void isHereGold()
+    {
+        int i;
+        i = (int) (Math.random() * 5 + 1);
+        if (i == 1 && !current.equals(rooms.get(0)))
+        {
+            int goldFound = (int) (Math.random() * 10 + 1);
+            io.put("What luck! You found " + goldFound + " gold coins!!\n");
+            player.setGold(player.getGold() + goldFound);
+            io.put("You now have " + player.getGold() + " gold coins!\n\n");
+        }
     }
 
 }

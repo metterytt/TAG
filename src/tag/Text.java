@@ -136,9 +136,10 @@ public class Text
                 + "West - door");
         //room16
         descriptions.add("The master dining room. A winding staircase can be "
-                + "entered to the north, and there are also three doors.\n"
+                + "entered to the north, and there are also two doors leading east and "
+                + "west. In the southern wall, there is a small passage.\n"
                 + "North - stairs\n"
-                + "South - door\n"
+                + "South - small passage\n"
                 + "East - door\n"
                 + "West - door");
         //room17
@@ -155,8 +156,13 @@ public class Text
                 + "East - stairs");
         //room19
         descriptions.add("After ascending a seemingly endless staircase, you"
-                + " enter a fully equipped observatory. The only exit is the"
-                + " stairs leading back south.\n"
+                + " enter a fully equipped observatory.\nA majestic telescope situated"
+                + " in the middle of the room points towards the sky through an opening"
+                + " in the vast walls. Examining it closer, it becomes obvious "
+                + "that this telescope was special to someone. An inscription reads:\n\n"
+                + "*** TO MY LOVING DAUGHTER ELENA. I WOULD GIVE YOU THE STARS IF I COULD ***\n\n"
+                + "Elena. What a pretty name, you think.\n"
+                + "The only exit is the stairs leading back south.\n"
                 + "South - stairs");
     }
 

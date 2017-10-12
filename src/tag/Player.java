@@ -13,7 +13,18 @@ public class Player
         
 {
     private String name;
-    private int health = 100;
+    private int health = 10;
+    private int gold = 0;
+
+    public int getGold()
+    {
+        return gold;
+    }
+
+    public void setGold(int gold)
+    {
+        this.gold = gold;
+    }
     
     public Player (String name)
     {
