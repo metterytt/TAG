@@ -13,6 +13,7 @@ public class Player
         
 {
     private String name;
+    private int health = 100;
     
     public Player (String name)
     {
@@ -23,4 +24,15 @@ public class Player
     {
         return name;
     }
+
+    public int getHealth()
+    {
+        return health;
+    }
+
+    public void setHealth(int health)
+    {
+        this.health = health;
+    }
+    
 }

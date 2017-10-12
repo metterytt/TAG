@@ -113,10 +113,10 @@ public class Text
         //room12
         descriptions.add("This room must have served as the castle's living"
                 + " room. Several groups of armchairs and sofas are arranged"
-                + " throughout it. Doors lead north, south and west.\n"
+                + " throughout it. Doors lead north, south and east.\n"
                 + "North - door\n"
                 + "South - door\n"
-                + "West - door");
+                + "East - door");
         //room13
         descriptions.add("This seems to be the guests' chambers. Doors lead"
                 + "  west and south, and to the north is an exit to a balcony.\n"
@@ -151,8 +151,8 @@ public class Text
         //room18
         descriptions.add("Here is the master's chambers. Vastly furnished"
                 + " with exquisite interior, but otherwise a dead end. Stairs"
-                + " lead west.\n"
-                + "West - stairs");
+                + " lead east.\n"
+                + "East - stairs");
         //room19
         descriptions.add("After ascending a seemingly endless staircase, you"
                 + " enter a fully equipped observatory. The only exit is the"
