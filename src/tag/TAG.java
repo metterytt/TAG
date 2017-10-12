@@ -10,7 +10,7 @@ import textio.TextIO;
 
 /**
  *
- * @author mette
+ * @author mette, rasmus og kim
  */
 public class TAG
 {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author mette
+ * @author mette, rasmus og kim
  */
 public class Text
 {

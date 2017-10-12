@@ -7,7 +7,7 @@ package tag;
 
 /**
  *
- * @author mette
+ * @author mette, rasmus og kim
  */
 public class Player
         
