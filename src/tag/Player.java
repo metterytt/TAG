@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tag;
 
 /**
@@ -10,25 +5,16 @@ package tag;
  * @author mette, rasmus og kim
  */
 public class Player
-        
+
 {
+
     private String name;
-    private int health = 10;
+    private int health = 100;
     private int gold = 0;
 
-    public int getGold()
+    public Player(String name)
     {
-        return gold;
-    }
-
-    public void setGold(int gold)
-    {
-        this.gold = gold;
-    }
-    
-    public Player (String name)
-    {
-        this.name = name;
+        this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
     public String getName()
@@ -45,5 +31,14 @@ public class Player
     {
         this.health = health;
     }
-    
+
+    public int getGold()
+    {
+        return gold;
+    }
+
+    public void setGold(int gold)
+    {
+        this.gold = gold;
+    }
 }

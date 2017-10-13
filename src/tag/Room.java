@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tag;
 
 import java.util.ArrayList;
@@ -19,7 +14,6 @@ public class Room
     private String description;
     private String name;
     private TextIO io = new TextIO(new SysTextIO());
-    private boolean visited = false;
     private Room north = null;
     private Room south = null;
     private Room east = null;
@@ -30,17 +24,6 @@ public class Room
     {
         this.description = description;
         this.name = name;
-    }
-
-    public void setVisited(boolean visited)
-    {
-        this.visited = visited;
-    }
-
-
-    public boolean isVisited()
-    {
-        return visited;
     }
 
     public void setNorth(Room north)
