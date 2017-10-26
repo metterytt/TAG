@@ -14,16 +14,39 @@ public class Room
     private String description;
     private String name;
     private TextIO io = new TextIO(new SysTextIO());
+    private boolean hasHadAnEvent = false;
     private Room north = null;
     private Room south = null;
     private Room east = null;
     private Room west = null;
     private ArrayList<String> choices = new ArrayList<>();
+    private Item item;
 
     public Room(String description, String name)
     {
         this.description = description;
         this.name = name;
+    }
+
+    public Item getItem()
+    {
+        return item;
+    }
+
+    public void setItem(Item item)
+    {
+        this.item = item;
+    }
+    
+
+    public boolean isHasHadAnEvent()
+    {
+        return hasHadAnEvent;
+    }
+
+    public void setHasHadAnEvent(boolean hasHadAnEvent)
+    {
+        this.hasHadAnEvent = hasHadAnEvent;
     }
 
     public void setNorth(Room north)

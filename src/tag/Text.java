@@ -23,6 +23,9 @@ public class Text
                 + "the ending is allways the same. Once you enter the castle,"
                 + "you never return.\n"
                 + "\n"
+                + "The tales of a deathly troll roaming the halls of the castle "
+                + "have not scared you. You are determined to find the treasure \n"
+                + "and return victorious.\n\n"
                 + "The first room is a huge corridor. An old red carpet "
                 + "leads the way across the room, and ends at a big wooden \n"
                 + "gate with a grim statue of a gargoyle on each side. "
@@ -34,6 +37,7 @@ public class Text
                 + "has taken its toll on it. You notice the north wall is \n"
                 + "filled with paintings, but too dusty and faded to see the motive. "
                 + "You see two identical doors on each side of the room.\n\n"
+                + "South - gate\n"
                 + "West - door\n"
                 + "East - door");
         //room2
