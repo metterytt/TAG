@@ -5,13 +5,14 @@
  */
 package tag;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  *
- * @author mette
+ * @author tobias
  */
-public class RND
+public class RND implements Serializable
 {
     private static Random rnd = new Random();
     

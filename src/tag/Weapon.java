@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tag;
 
 /**
  *
- * @author mette
+ * @author mette, kim og rasmus
  */
 public class Weapon extends Item
 {
 
     public Weapon(String name)
     {
-        this.value = (int) (Math.random() * 11 + 10);
+        this.value = random.nextInt(10, 20);
         this.name = name;
     }
 

@@ -63,4 +63,5 @@ public class Player implements Serializable
     {
         return name + " obtained " + gold + " goldpieces!\n";
     }
+
 }

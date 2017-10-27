@@ -19,6 +19,8 @@ public class Dungeon
     private Room current;
     private FileIO hiscore = new FileIO();
     private RND random = new RND();
+    private final int MONSTER_ROOM_MIN = 9;
+    private final int MONSTER_ROOM_MAX = 19;
 
     public Dungeon()
     {
@@ -37,37 +39,34 @@ public class Dungeon
         rooms.add(new Room("Quitting room", "room20"));
         rooms.add(new Room("Winning room", "room21"));
 
-        /**
-         * places items in some rooms
-         */
-        for (Room r : rooms)
-        {
-            if (!r.equals(rooms.get(11)) && !r.equals(rooms.get(20)) && !r.equals(rooms.get(21)))
-            {
-                int checkForItems = random.nextInt(1, 2);
-                if (checkForItems == 1)
-                {
-                    int whichItem = random.nextInt(1, 3);
-                    Item newItem = new Item();
-                    switch (whichItem)
-                    {
-                        case 1:
-                            newItem = new Potion("Healing Potion");
-                            break;
-                        case 2:
-                            newItem = new Weapon("Sword");
-                            break;
-                        case 3:
-                            newItem = new Armor("Helmet");
-                            break;
-                        default:
-                            newItem = null;
-                    }
-                    r.setItem(newItem);
-                }
-            }
-        }
+        placeItem();
+        setExits();
+        introSequence();
 
+        rooms.get(0).setHasHadAnEvent(true);
+
+        Room room = rooms.get(random.nextInt(MONSTER_ROOM_MIN, MONSTER_ROOM_MAX));
+        monster = new Monster(room);
+    }
+
+    private void introSequence()
+    {
+        /**
+         * intro sequence. creates player and places monster in random room
+         */
+        io.put("***** Text Adventure Game: The Abandoned Castle *****\n\n");
+        io.put("How to play:\n"
+                + "You must find your way through the castle.\n");
+        help();
+
+        io.put("Enter your name:");
+        player = new Player(io.get());
+        io.put("\nWelcome, " + player.getName() + ", to The Abandoned Castle.\n"
+                + "Your initial health is set to " + player.getHealth() + ".\n");
+    }
+
+    private void setExits()
+    {
         /**
          * sets available exits from each room
          */
@@ -139,26 +138,44 @@ public class Dungeon
         rooms.get(18).setEast(rooms.get(17));
 
         rooms.get(19).setSouth(rooms.get(16));
-        rooms.get(0).setHasHadAnEvent(true);
+    }
 
+    private void placeItem()
+    {
         /**
-         * intro sequence. creates player and places monster in random room
+         * places items in some rooms
          */
-        io.put("***** Text Adventure Game: The Abandoned Castle *****\n\n");
-        io.put("How to play:\n"
-                + "You must find your way through the castle.\n");
-        help();
-
-        io.put("Enter your name:");
-        player = new Player(io.get());
-        io.put("\nWelcome, " + player.getName() + ", to The Abandoned Castle.\n"
-                + "Your initial health is set to " + player.getHealth() + ".\n");
-        Room room = rooms.get(random.nextInt(9, 19));
-        monster = new Monster(room);
+        for (Room r : rooms)
+        {
+            if (!r.equals(rooms.get(11)) && !r.equals(rooms.get(20)) && !r.equals(rooms.get(21)))
+            {
+                int checkForItems = random.nextInt(1, 2);
+                if (checkForItems == 1)
+                {
+                    int whichItem = random.nextInt(1, 3);
+                    Item newItem = new Item();
+                    switch (whichItem)
+                    {
+                        case 1:
+                            newItem = new Potion("Healing Potion");
+                            break;
+                        case 2:
+                            newItem = new Weapon("Sword");
+                            break;
+                        case 3:
+                            newItem = new Armor("Helmet");
+                            break;
+                        default:
+                            newItem = null;
+                    }
+                    r.setItem(newItem);
+                }
+            }
+        }
     }
 
     /**
-     * starts game. cycles through rooms as the player enters. provides endings 
+     * starts game. cycles through rooms as the player enters. provides endings
      * for success and for quitting - if success, writes player to hiscorelist
      * and prints the list.
      */
@@ -175,7 +192,9 @@ public class Dungeon
             io.put("You won the game.\n\n");
 
             hiscore.addWinner(player);
+            io.put("List of hiscores in The Abandoned Castle:\n");
             hiscore.showList();
+
         } else
         {
             io.put("\nYou run as fast as you can, leaving the castle, "
@@ -184,9 +203,9 @@ public class Dungeon
     }
 
     /**
-     * room event for each entered room. if current room has not earlier had an event,
-     * checks for gold, traps and items. checks if player health goes to zero. checks 
-     * code entered in room 11 for escaping. 
+     * room event for each entered room. if current room has not earlier had an
+     * event, checks for gold, traps and items. checks if player health goes to
+     * zero. checks code entered in room 11 for escaping.
      */
     public Room enter()
     {
@@ -218,7 +237,7 @@ public class Dungeon
         {
             return rooms.get(20);
         }
-        
+
         /**
          * asks user for input and uses response method to check input and
          * determine next room
@@ -232,14 +251,15 @@ public class Dungeon
             io.put("You can't go that way from here. Try again:");
             result = response(io.get().toLowerCase());
         }
-        
+
         monster.move();
         return result;
     }
 
     /**
      * checks for access code to final room for escaping dungeon
-     * @return 
+     *
+     * @return
      */
     private Room checkCode()
     {
@@ -271,8 +291,9 @@ public class Dungeon
 
     /**
      * handles various user inputs
+     *
      * @param input
-     * @return 
+     * @return
      */
     private Room response(String input)
     {
@@ -281,11 +302,16 @@ public class Dungeon
             if (input.equals("i"))
             {
                 ArrayList<Item> inventory = player.getInventory();
-                for(Item i:inventory)
+                if (inventory.size() == 0)
+                {
+                    io.put("You haven't collected any items yet.\n");
+                }
+                for (Item i : inventory)
                 {
                     io.put(i.toString());
                     io.put("\n");
                 }
+                io.put("_________________________________________________________________________\n");
                 io.put("In which direction would you like to continue?" + "\n");
                 input = io.get();
                 input = input.toLowerCase();
@@ -362,7 +388,7 @@ public class Dungeon
     private void isHereATrap()
     {
         int trap;
-        trap = (int) (Math.random() * 3 + 1);
+        trap = random.nextInt(1, 3);
         if (trap == 1)
         {
             trapEvent();
@@ -373,7 +399,7 @@ public class Dungeon
     {
         io.put(">>>>> You activated a trap! <<<<<\n");
         int playerHealth = player.getHealth();
-        playerHealth -= 10;
+        playerHealth -= 5;
         player.setHealth(playerHealth);
         io.put("Your health is now " + player.getHealth() + ".\n");
         io.put("_________________________________________________________________________\n\n");
@@ -409,26 +435,13 @@ public class Dungeon
 //        }
     }
 
-//    private void combat(int monsterHealth)
-//    {
-//        io.put("You have no choice but to fight!\n\n");
-//        int playerHealth = player.getHealth();
-//        playerHealth = playerHealth - monsterHealth / 4;
-//        player.setHealth(playerHealth);
-//        if (player.getHealth() < 0)
-//        {
-//            player.setHealth(0);
-//        }
-//        io.put("The battle is over. Your health is now " + player.getHealth() + ".");
-//        io.put("\n_________________________________________________________________________\n\n");
-//    }
     private void isHereGold()
     {
         int i;
-        i = (int) (Math.random() * 5 + 1);
+        i = random.nextInt(1, 3);
         if (i == 1 && !current.equals(rooms.get(0)))
         {
-            int goldFound = (int) (Math.random() * 10 + 1);
+            int goldFound = random.nextInt(5, 20);
             io.put("What luck! You found " + goldFound + " gold coins!!\n");
             player.setGold(player.getGold() + goldFound);
             io.put("You now have " + player.getGold() + " gold coins!");

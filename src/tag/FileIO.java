@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tag;
 
 import java.io.File;
@@ -13,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import textio.SysTextIO;
+import textio.TextIO;
 
 /**
  *
@@ -27,6 +24,7 @@ public class FileIO
     private FileInputStream fi;
     private ObjectInputStream oi;
     private ArrayList<Player> winners;
+    private TextIO io = new TextIO(new SysTextIO());
 
     public FileIO()
 
@@ -45,11 +43,11 @@ public class FileIO
             
         } catch (FileNotFoundException e)
         {
-            System.out.println("File not found");
+            io.put("File not found\n");
         } catch (IOException e)
         {
-            System.out.println("Error initializing stream");
-            //winners = new ArrayList<Player>();
+            io.put("Error initializing stream\n");
+//            winners = new ArrayList<Player>();
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
@@ -67,10 +65,12 @@ public class FileIO
             o.writeObject(winners);
         } catch (FileNotFoundException e)
         {
-            System.out.println("File not found");
+            io.put("File not found");
+            e.printStackTrace();
         } catch (IOException e)
         {
-            System.out.println("Error initializing stream");
+            io.put("Error initializing stream");
+            e.printStackTrace();
         }
 
     }
@@ -82,14 +82,15 @@ public class FileIO
             fi = new FileInputStream(hiscore);
             oi = new ObjectInputStream(fi);
             ArrayList<Player> winnerReader = (ArrayList<Player>) oi.readObject();
-            System.out.println("List of hiscores in The Abandoned Castle:\n");
-            for (Player p : winnerReader)
+            for(Player p: winnerReader)
             {
-                System.out.println(p.toString());
+                io.put(p.toString());
             }
+            
         } catch (IOException e)
         {
-            System.out.println("Error initializing stream");
+            io.put("Error initializing stream");
+            e.printStackTrace();
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();

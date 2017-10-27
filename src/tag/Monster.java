@@ -5,15 +5,13 @@
  */
 package tag;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author mette
  */
 public class Monster
 {
-
+    private RND random = new RND();
     private int health = 100;
     private Room current;
 
@@ -26,15 +24,9 @@ public class Monster
     {
         int chooseDirection;
         Room nextRoom;
-        int count = 0;
         do
         {
-            ++count;
-            if(count > 1000)
-            {
-                System.out.println("Her er problemet");
-            }
-            chooseDirection = (int) (Math.random() * 4 + 1);
+            chooseDirection = random.nextInt(1, 4);
             switch (chooseDirection)
             {
                 case 1:
