@@ -14,6 +14,11 @@ public class Armor extends Item
         this.name = name;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
     public int getValue()
     {
         return value;

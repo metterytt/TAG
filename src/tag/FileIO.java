@@ -30,9 +30,11 @@ public class FileIO
 
     {
         hiscore = new File("hiscore.txt");
-
     }
 
+    /**
+     * reads arraylist with previous winners from file when game is initialized
+     */
     public void readWinners()
     {
         try
@@ -40,20 +42,25 @@ public class FileIO
             fi = new FileInputStream(hiscore);
             oi = new ObjectInputStream(fi);
             winners = (ArrayList<Player>) oi.readObject();
-            
+
         } catch (FileNotFoundException e)
         {
             io.put("File not found\n");
         } catch (IOException e)
         {
-            io.put("Error initializing stream\n");
-//            winners = new ArrayList<Player>();
+            io.put("High score list empty\n");
+            winners = new ArrayList<Player>();
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
     }
 
+    /**
+     * adds the player to the hiscorelist if game is won
+     *
+     * @param p
+     */
     public void addWinner(Player p)
     {
         winners.add(p);
@@ -61,7 +68,6 @@ public class FileIO
         {
             f = new FileOutputStream(hiscore);
             o = new ObjectOutputStream(f);
-
             o.writeObject(winners);
         } catch (FileNotFoundException e)
         {
@@ -72,9 +78,11 @@ public class FileIO
             io.put("Error initializing stream");
             e.printStackTrace();
         }
-
     }
 
+    /**
+     * prints the list of players who have won including their goldscore
+     */
     public void showList()
     {
         try
@@ -82,11 +90,11 @@ public class FileIO
             fi = new FileInputStream(hiscore);
             oi = new ObjectInputStream(fi);
             ArrayList<Player> winnerReader = (ArrayList<Player>) oi.readObject();
-            for(Player p: winnerReader)
+            for (Player p : winnerReader)
             {
                 io.put(p.toString());
             }
-            
+
         } catch (IOException e)
         {
             io.put("Error initializing stream");

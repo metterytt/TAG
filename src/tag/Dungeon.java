@@ -59,8 +59,16 @@ public class Dungeon
                 + "You must find your way through the castle.\n");
         help();
 
+        String name = "";
         io.put("Enter your name:");
-        player = new Player(io.get());
+        name = io.get();
+        while (name.length() == 0)
+        {
+            io.put("Please re-enter your name.\n");
+            name = io.get();
+        }
+
+        player = new Player(name);
         io.put("\nWelcome, " + player.getName() + ", to The Abandoned Castle.\n"
                 + "Your initial health is set to " + player.getHealth() + ".\n");
     }
@@ -207,7 +215,7 @@ public class Dungeon
      * event, checks for gold, traps and items. checks if player health goes to
      * zero. checks code entered in room 11 for escaping.
      */
-    public Room enter()
+    private Room enter()
     {
         io.put("\n");
 
@@ -215,15 +223,15 @@ public class Dungeon
         {
             return checkCode();
         }
-//        if (current.equals(lotte.getCurrent()))
-//        {
-//            io.put("As you enter the room, you hear a loud growling. You are struck with "
-//                    + "fear even before you can determine the source of the growling.\n"
-//                    + "You never thought the tales of the troll to be true, but before you "
-//                    + "emerges the largest creature you have ever seen. In a flash, you \n"
-//                    + "are ridded of your belongings and have no choice but to flee.\n");
-//            return rooms.get(20);
-//        }
+        if (current.equals(monster.getCurrent()))
+        {
+            io.put("As you enter the room, you hear a loud growling. You are struck with "
+                    + "fear even before you can determine the source of the growling.\n"
+                    + "You never thought the tales of the troll to be true, but before you "
+                    + "emerges the largest creature you have ever seen. In a flash, you \n"
+                    + "are ridded of your belongings and have no choice but to flee.\n");
+            return rooms.get(20);
+        }
         io.put(current.getDescription());
         io.put("\n_________________________________________________________________________");
         io.put("\n\n");
@@ -367,13 +375,17 @@ public class Dungeon
         io.put("\n");
     }
 
+    /**
+     * checks if room has an item and if so, asks if user wants to add to
+     * inventory
+     */
     private void isHereAnItem()
     {
         Item newItem = current.getItem();
         if (newItem != null)
         {
             io.put("YOU FOUND A CHEST, containing a shiny " + newItem.getName()
-                    + "! Would you like to pick it up? y/n\n");
+                    + "! Would you like to pick it up?\nWrite 'y' or 'yes' to pick it up.\n");
             String pickUp = io.get();
             if (pickUp.equals("y") || pickUp.equals("yes"))
             {
@@ -385,56 +397,28 @@ public class Dungeon
         current.setHasHadAnEvent(true);
     }
 
+    /**
+     * checks for a randomly generated trap
+     */
     private void isHereATrap()
     {
         int trap;
         trap = random.nextInt(1, 3);
         if (trap == 1)
         {
-            trapEvent();
+            io.put(">>>>> You activated a trap! <<<<<\n");
+            int playerHealth = player.getHealth();
+            playerHealth -= 5;
+            player.setHealth(playerHealth);
+            io.put("Your health is now " + player.getHealth() + ".\n");
+            io.put("_________________________________________________________________________\n\n");
+            current.setHasHadAnEvent(true);
         }
     }
 
-    private void trapEvent()
-    {
-        io.put(">>>>> You activated a trap! <<<<<\n");
-        int playerHealth = player.getHealth();
-        playerHealth -= 5;
-        player.setHealth(playerHealth);
-        io.put("Your health is now " + player.getHealth() + ".\n");
-        io.put("_________________________________________________________________________\n\n");
-        current.setHasHadAnEvent(true);
-
-//        switch (trap)
-//        {
-//            case 1:
-//            {
-//                io.put("You hear a sizzling noise from the left. You quickly "
-//                        + "spin around, only to see an abnormously large rat \n"
-//                        + "moving towards you, hissing angrily.\n\n");
-//                combat((int) (Math.random() * 50 + 1));
-//                break;
-//            }
-//            case 2:
-//            {
-//                io.put("You only just have time to get a short view of you "
-//                        + "surroundings, before you are attacked by a vicious troll!\n\n");
-//                combat((int) (Math.random() * 50 + 1));
-//                break;
-//            }
-//            case 3:
-//            {
-//                io.put("An ominous rattling is heard from the far side of the "
-//                        + "premises. Before you even have the chance to look for \n"
-//                        + "a proper escape route, a skeleton is moving towards "
-//                        + "you surprisingly rapidly, weapon raised to attack.\n\n");
-//                combat((int) (Math.random() * 50 + 1));
-//                break;
-//            }
-//
-//        }
-    }
-
+    /**
+     * checks for randomly generated gold
+     */
     private void isHereGold()
     {
         int i;

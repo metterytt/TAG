@@ -37,7 +37,6 @@ public class Room
     {
         this.item = item;
     }
-    
 
     public boolean isHasHadAnEvent()
     {

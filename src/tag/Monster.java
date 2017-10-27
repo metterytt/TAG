@@ -47,7 +47,6 @@ public class Monster
 
         } while (nextRoom == null || nextRoom.getName().equals("room11") || nextRoom.getName().equals("room0"));
         current = nextRoom;
-        System.out.println("Lotte er i " + current.getName());
     }
 
     public int getHealth()
