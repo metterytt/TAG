@@ -5,48 +5,37 @@
  */
 package tag;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author mette
  */
 public class Monster
 {
-    private RND random = new RND();
-    private int health = 100;
-    private Room current;
 
-    public Monster(Room room)
+    protected String name;
+    protected int health;
+    protected int damage;
+    protected Item item;
+    protected RND random = new RND();
+    protected ArrayList<String> names = new ArrayList<>();
+
+    @Override
+    public String toString()
     {
-        current = room;
+        return name;
     }
 
-    public void move()
+    public String getName()
     {
-        int chooseDirection;
-        Room nextRoom;
-        do
-        {
-            chooseDirection = random.nextInt(1, 4);
-            switch (chooseDirection)
-            {
-                case 1:
-                    nextRoom = current.getNorth();
-                    break;
-                case 2:
-                    nextRoom = current.getSouth();
-                    break;
-                case 3:
-                    nextRoom = current.getEast();
-                    break;
-                case 4:
-                    nextRoom = current.getWest();
-                    break;
-                default:
-                    nextRoom = null;
-            }
+        return name;
+    }
 
-        } while (nextRoom == null || nextRoom.getName().equals("room11") || nextRoom.getName().equals("room0"));
-        current = nextRoom;
+    public int attack(int playerArmor)
+    {
+        int damageToPlayer = damage - playerArmor;
+        return damageToPlayer;
     }
 
     public int getHealth()
@@ -54,8 +43,34 @@ public class Monster
         return health;
     }
 
-    public Room getCurrent()
+    public void setHealth(int health)
     {
-        return current;
+        if (health > 0)
+        {
+            this.health = health;
+        } else
+        {
+            this.health = 0;
+        }
+    }
+
+    public int getDamage()
+    {
+        return damage;
+    }
+
+    public void setDamage(int damage)
+    {
+        this.damage = damage;
+    }
+
+    public Item getItem()
+    {
+        return item;
+    }
+
+    public void setItem(Item item)
+    {
+        this.item = item;
     }
 }

@@ -13,6 +13,7 @@ public class Room
 
     private String description;
     private String name;
+    private int gold = 0;
     private TextIO io = new TextIO(new SysTextIO());
     private boolean hasHadAnEvent = false;
     private Room north = null;
@@ -20,7 +21,9 @@ public class Room
     private Room east = null;
     private Room west = null;
     private ArrayList<String> choices = new ArrayList<>();
-    private Item item;
+    private ArrayList<Item> itemsInRoom = new ArrayList<>();
+    private Monster monster;
+    private boolean hasMonster = false;
 
     public Room(String description, String name)
     {
@@ -28,14 +31,49 @@ public class Room
         this.name = name;
     }
 
-    public Item getItem()
+    public int getGold()
     {
-        return item;
+        return gold;
     }
 
-    public void setItem(Item item)
+    public void setGold(int gold)
     {
-        this.item = item;
+        this.gold = gold;
+    }
+
+    public void setHasMonster(boolean hasMonster)
+    {
+        this.hasMonster = hasMonster;
+    }
+
+    public boolean getHasMonster()
+    {
+        return hasMonster;
+    }
+
+    public ArrayList<Item> getItemsInRoom()
+    {
+        return itemsInRoom;
+    }
+
+    public void setItemsInRoom(Item item)
+    {
+        itemsInRoom.add(item);
+    }
+
+    public void clearItems()
+    {
+        itemsInRoom.clear();
+    }
+
+    public void setMonster(Monster monster)
+    {
+        this.monster = monster;
+    }
+
+    public Monster getMonster()
+    {
+        return monster;
     }
 
     public boolean isHasHadAnEvent()

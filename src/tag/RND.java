@@ -14,15 +14,16 @@ import java.util.Random;
  */
 public class RND implements Serializable
 {
+
     private static Random rnd = new Random();
-    
+
     public static int nextInt(int bound)
     {
         return rnd.nextInt(bound);
     }
-    
+
     public static int nextInt(int min, int max)
     {
-        return nextInt(max - min + 1) + 1;
+        return nextInt(max - min + 1) + min;
     }
 }

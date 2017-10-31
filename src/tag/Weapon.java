@@ -1,17 +1,40 @@
 
 package tag;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author mette, kim og rasmus
  */
 public class Weapon extends Item
 {
-
-    public Weapon(String name)
+    private ArrayList<String> weaponNames= new ArrayList<>();
+    public Weapon(int tier)
     {
-        this.value = random.nextInt(10, 20);
-        this.name = name;
+        switch (tier)
+        {
+            case 1:
+                this.value = random.nextInt(1, 2);
+                this.tier = 1;
+                break;
+            case 2:
+                this.value = random.nextInt(3, 4);
+                this.tier = 2;
+                break;
+            case 3:
+                this.value = random.nextInt(5, 6);
+                this.tier = 3;
+                break;
+            default:
+                this.value = 0;
+        }
+        weaponNames.add("Sword");
+        weaponNames.add("Dagger");
+        weaponNames.add("Mace");
+        weaponNames.add("Sabre");
+        weaponNames.add("Knife");
+        this.name = weaponNames.get(random.nextInt(0,weaponNames.size()-1));
     }
 
     public String getName()
@@ -27,6 +50,6 @@ public class Weapon extends Item
     @Override
     public String toString()
     {
-        return name + ", damage " + value;
+        return name +", damage " + value;
     }
 }

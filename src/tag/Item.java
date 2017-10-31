@@ -12,6 +12,7 @@ public class Item implements Serializable
     protected RND random = new RND();
     protected String name;
     protected int value;
+    protected int tier;
 
     public String getName()
     {

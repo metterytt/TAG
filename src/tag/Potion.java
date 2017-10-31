@@ -1,4 +1,3 @@
-
 package tag;
 
 /**
@@ -8,10 +7,27 @@ package tag;
 public class Potion extends Item
 {
 
-    public Potion(String name)
+    public Potion(int tier)
     {
-        this.value = random.nextInt(10, 20);
-        this.name = name;
+        switch (tier)
+        {
+            case 1:
+                this.value = random.nextInt(1, 2);
+                this.tier = 1;
+                break;
+            case 2:
+                this.value = random.nextInt(3, 4);
+                this.tier = 2;             
+                break;
+            case 3:
+                this.value = random.nextInt(5, 6);
+                this.tier = 3;
+                break;
+            default:
+                this.value = 0;
+        }
+        this.name = "Healing Potion, heals you to max Health";
+        
     }
 
     public String getName()
@@ -28,7 +44,6 @@ public class Potion extends Item
     @Override
     public String toString()
     {
-        return name + ", heals " + value;
+        return name;
     }
 }
-
