@@ -13,28 +13,30 @@ public class Armor extends Item
     
     public Armor(int tier)
     {
+        armorNames.add("Leather Armor");
+        armorNames.add("Chainmail Armor");
         switch (tier)
         {
             case 1:
-                this.value = random.nextInt(1, 2);
+                this.value = random.nextInt(20, 30);
                 this.tier = 1;
+                this.name = "Cloth Armor";
                 break;
             case 2:
-                this.value = random.nextInt(3, 4);
+                this.value = random.nextInt(40, 50);
                 this.tier = 2;
+                this.name = armorNames.get(random.nextInt(0,armorNames.size()-1));
                 break;
             case 3:
-                this.value = random.nextInt(5, 6);
+                this.value = random.nextInt(60, 70);
                 this.tier = 3;
+                this.name = "Plate Armor";
                 break;
             default:
                 this.value = 0;
         }
-        armorNames.add("Leather Armor");
-        armorNames.add("Cloth Armor");
-        armorNames.add("Plate Armor");
-        armorNames.add("Chainmail Armor");
-        this.name = armorNames.get(random.nextInt(0,armorNames.size()-1));
+        
+        
     }
 
     public String getName()

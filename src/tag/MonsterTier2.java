@@ -7,10 +7,10 @@ package tag;
 public class MonsterTier2 extends Monster
 {
 
-    final int MIN_HEALTH = 1;
-    final int MAX_HEALTH = 2;
-    final int MIN_DAMAGE = 1;
-    final int MAX_DAMAGE = 2;
+    final int MIN_HEALTH = 400;
+    final int MAX_HEALTH = 500;
+    final int MIN_DAMAGE = 100;
+    final int MAX_DAMAGE = 150;
 
     public MonsterTier2(Item item)
     {
@@ -23,11 +23,6 @@ public class MonsterTier2 extends Monster
         this.item = item;
     }
 
-    public int attack(int playerArmor)
-    {
-        int damageToPlayer = damage - playerArmor;
-        return damageToPlayer;
-    }
 
     public String toString()
     {

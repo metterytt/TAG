@@ -12,10 +12,10 @@ public class Player implements Serializable
 {
 
     private String name;
-    private int maxHealth = 100;
-    private int health = 100;
+    private int maxHealth = 300;
+    private int health = 300;
     private int gold = 0;
-    private int baseDamage = 100;
+    private int baseDamage = 20;
     private int damage;
     private int armor = 0;
     private int level = 1;
@@ -117,6 +117,10 @@ public class Player implements Serializable
     public void setHealth(int health)
     {
         this.health = health;
+        if (this.health < 0)
+        {
+            this.health = 0;
+        }
     }
 
     public int getGold()

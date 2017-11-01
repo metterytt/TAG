@@ -163,8 +163,8 @@ public class Text
                 + " lead east.\n\n"
                 + "East - stairs");
         //room19
-        descriptions.add("After ascending a seemingly endless staircase, you"
-                + " enter a fully equipped observatory. A majestic telescope situated \n"
+        descriptions.add("You have entered "
+                + "a fully equipped observatory. A majestic telescope situated \n"
                 + "in the middle of the room points towards the sky through an opening"
                 + " in the vast walls. Examining it closer, it becomes obvious \n"
                 + "that this telescope was special to someone. An inscription reads:\n\n"

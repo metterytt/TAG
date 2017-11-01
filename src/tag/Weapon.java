@@ -15,15 +15,15 @@ public class Weapon extends Item
         switch (tier)
         {
             case 1:
-                this.value = random.nextInt(1, 2);
+                this.value = random.nextInt(40, 60);
                 this.tier = 1;
                 break;
             case 2:
-                this.value = random.nextInt(3, 4);
+                this.value = random.nextInt(80, 100);
                 this.tier = 2;
                 break;
             case 3:
-                this.value = random.nextInt(5, 6);
+                this.value = random.nextInt(120, 150);
                 this.tier = 3;
                 break;
             default:

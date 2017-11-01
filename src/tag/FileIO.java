@@ -83,26 +83,31 @@ public class FileIO
     /**
      * prints the list of players who have won including their goldscore
      */
-    public void showList()
-    {
-        try
-        {
-            fi = new FileInputStream(hiscore);
-            oi = new ObjectInputStream(fi);
-            ArrayList<Player> winnerReader = (ArrayList<Player>) oi.readObject();
-            for (Player p : winnerReader)
-            {
-                io.put(p.toString());
-            }
+//    public void showList()
+//    {
+//        try
+//        {
+//            fi = new FileInputStream(hiscore);
+//            oi = new ObjectInputStream(fi);
+//            ArrayList<Player> winnerReader = (ArrayList<Player>) oi.readObject();
+//            for (Player p : winnerReader)
+//            {
+//                io.put(p.toString());
+//            }
+//
+//        } catch (IOException e)
+//        {
+//            io.put("Error initializing stream");
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
 
-        } catch (IOException e)
-        {
-            io.put("Error initializing stream");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+    public ArrayList<Player> getWinners()
+    {
+        return winners;
     }
 
 }

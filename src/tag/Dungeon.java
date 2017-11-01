@@ -1,6 +1,8 @@
 package tag;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import textio.SysTextIO;
 import textio.TextIO;
 
@@ -313,8 +315,17 @@ public class Dungeon
             io.put("You won the game.\n\n");
 
             hiscore.addWinner(player);
+
+            ArrayList<Player> hiscoreListToBePrinted = new ArrayList<Player>();
+            hiscoreListToBePrinted = hiscore.getWinners();
             io.put("List of hiscores in The Abandoned Castle:\n");
-            hiscore.showList();
+
+            Collections.sort(hiscoreListToBePrinted, new SortByGold());
+            for (int i = 0; i < hiscoreListToBePrinted.size(); i++)
+            {
+                io.put((i + 1) + ". ");
+                io.put(hiscoreListToBePrinted.get(i).getName() + ", obtained " + hiscoreListToBePrinted.get(i).getGold() + " goldpieces.\n");
+            }
 
         } else if (player.getHealth() > 0)
         {
@@ -361,7 +372,7 @@ public class Dungeon
             if (resultOfCombat == 1)
             {
                 io.put("You defeated the " + current.getMonster().name + "! You gained "
-                        + "a level and 10 extra max Health and 2 extra base damage!\n\n");
+                        + "a level and 100 extra max Health and 20 extra base damage!\n\n");
                 io.put("The " + current.getMonster().name + " had a " + current.getMonster().item.toString() + "! "
                         + "Maybe you can use it - type y if you would like to pick it up.\n");
                 String pickUp = io.get();
@@ -482,11 +493,23 @@ public class Dungeon
     private int combat()
     {
 
-        io.put("Before you can get a view of your surroundings, "
-                + "you are attacked by a vicious " + current.getMonster().getName() + "!\n\n");
+        if (current.equals(allRooms.get(19)))
+        {
+            io.put("As you emerge from the seemingly endless staircase, you hear "
+                    + "an ominous rattling from the far side of the room. Before you\n"
+                    + "even have the chance to look for an escape route, the "
+                    + current.getMonster().name + " himself is moving towards you, surprisingly rapidly, \n"
+                    + "ready to kill! You know now that a tough battle awaits.\n\n");
+        } else
+        {
+            io.put("Before you can get a view of your surroundings, "
+                    + "you are attacked by a vicious " + current.getMonster().getName() + "!\n"
+                    + "This " + current.getMonster().name + " has " + current.getMonster().health + " health.\n\n");
+        }
+
         int damageToPlayer = current.getMonster().attack(player.getArmor());
         player.setHealth(player.getHealth() - damageToPlayer);
-        io.put("Your health is down to " + player.getHealth() + "!\n\n");
+        io.put("Your health is down to " + player.getHealth() + "/" + player.getMaxHealth() + "!\n\n");
         if (player.getHealth() == 0)
         {
             return 2;
@@ -524,8 +547,9 @@ public class Dungeon
                         if (current.getMonster().health == 0)
                         {
                             player.setLevel(player.getLevel() + 1);
-                            player.setMaxHealth(player.getMaxHealth() + 10);
-                            player.setBaseDamage(player.getBaseDamage() + 2);
+                            player.setMaxHealth(player.getMaxHealth() + 100);
+                            player.setHealth(player.getHealth() + 100);
+                            player.setBaseDamage(player.getBaseDamage() + 20);
                             player.setDamage(player.getWeaponEquipped().value);
 
                             return 1;
@@ -694,6 +718,7 @@ public class Dungeon
             case "hide":
                 return current;
             case "cheat":
+                player.setGold(200);
                 return current = allRooms.get(16);
             default:
                 return null;
@@ -763,6 +788,17 @@ public class Dungeon
     public String toString()
     {
         return "Dungeon{" + "rooms=" + allRooms + '}';
+    }
+
+    private class SortByGold implements Comparator<Player>
+    {
+
+        @Override
+        public int compare(Player o1, Player o2)
+        {
+            return o2.getGold() - o1.getGold();
+        }
+
     }
 
 }

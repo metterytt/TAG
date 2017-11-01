@@ -35,6 +35,10 @@ public class Monster
     public int attack(int playerArmor)
     {
         int damageToPlayer = damage - playerArmor;
+        if (damageToPlayer < 1)
+        {
+            damageToPlayer = 1;
+        }
         return damageToPlayer;
     }
 
