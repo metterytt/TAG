@@ -26,7 +26,7 @@ public class Potion extends Item
             default:
                 this.value = 0;
         }
-        this.name = "Healing Potion, heals you to max Health";
+        this.name = "Healing Potion";
         
     }
 

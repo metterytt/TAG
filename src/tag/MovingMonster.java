@@ -12,8 +12,8 @@ package tag;
 public class MovingMonster
 {
     private RND random = new RND();
-    private int health = 100;
     private Room current;
+    private boolean dead = false;
 
     public MovingMonster(Room room)
     {
@@ -46,13 +46,21 @@ public class MovingMonster
             }
 
         } while (nextRoom == null || nextRoom.getName().equals("room11") || nextRoom.getName().equals("room0"));
+        System.out.println("Lotte er i "+current.getName());
         current = nextRoom;
     }
 
-    public int getHealth()
+    public boolean isDead()
     {
-        return health;
+        return dead;
     }
+
+    public void setDead(boolean dead)
+    {
+        this.dead = dead;
+    }
+
+    
 
     public Room getCurrent()
     {

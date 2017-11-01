@@ -1,35 +1,30 @@
+
 package tag;
 
 /**
  *
  * @author mette, kim og rasmus
  */
-public class MonsterTier1 extends Monster
+public class MonsterTier4 extends Monster
 {
 
-    final int MIN_HEALTH = 20;
-    final int MAX_HEALTH = 30;
+    final int MIN_HEALTH = 1;
+    final int MAX_HEALTH = 2;
     final int MIN_DAMAGE = 1;
     final int MAX_DAMAGE = 2;
 
-    public MonsterTier1(Item item)
+    public MonsterTier4(Item item)
     {
         this.health = random.nextInt(MIN_HEALTH, MAX_HEALTH);
         this.damage = random.nextInt(MIN_DAMAGE, MAX_DAMAGE);
-        this.names.add("Rat");
-        this.names.add("Snake");
-        this.names.add("Spider");
-        this.name = names.get(random.nextInt(3));
+        
+        this.name = "Megamonster";
         this.item = item;
     }
 
     public int attack(int playerArmor)
     {
         int damageToPlayer = damage - playerArmor;
-        if (damageToPlayer < 1)
-        {
-            damageToPlayer = 1;
-        }
         return damageToPlayer;
     }
 
@@ -73,4 +68,5 @@ public class MonsterTier1 extends Monster
     {
         this.damage = damage;
     }
+
 }

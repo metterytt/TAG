@@ -19,13 +19,19 @@ public class Player implements Serializable
     private int damage;
     private int armor = 0;
     private int level = 1;
+    private boolean amulet = false;
     private ArrayList<Item> inventory = new ArrayList<>();
+    private Item armorEquipped;
+    private Item weaponEquipped;
 
     public Player(String name)
     {
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
         inventory.add(new Potion(1));
-        damage = baseDamage;
+        weaponEquipped = new Weapon(1);
+        armorEquipped = new Armor(1);
+        armor = armorEquipped.getValue();
+        damage = baseDamage + weaponEquipped.getValue();
     }
 
     public int getDamage()
@@ -46,6 +52,26 @@ public class Player implements Serializable
     public void setArmor(int armor)
     {
         this.armor = armor;
+    }
+
+    public Item getArmorEquipped()
+    {
+        return armorEquipped;
+    }
+
+    public void setArmorEquipped(Item armorEquipped)
+    {
+        this.armorEquipped = armorEquipped;
+    }
+
+    public Item getWeaponEquipped()
+    {
+        return weaponEquipped;
+    }
+
+    public void setWeaponEquipped(Item weaponEquipped)
+    {
+        this.weaponEquipped = weaponEquipped;
     }
 
     public int getBaseDamage()
@@ -116,6 +142,16 @@ public class Player implements Serializable
     public void setMaxHealth(int maxHealth)
     {
         this.maxHealth = maxHealth;
+    }
+
+    public boolean hasAmulet()
+    {
+        return amulet;
+    }
+
+    public void setAmulet(boolean amulet)
+    {
+        this.amulet = amulet;
     }
 
     @Override

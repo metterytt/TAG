@@ -15,7 +15,6 @@ public class Room
     private String name;
     private int gold = 0;
     private TextIO io = new TextIO(new SysTextIO());
-    private boolean hasHadAnEvent = false;
     private Room north = null;
     private Room south = null;
     private Room east = null;
@@ -74,16 +73,6 @@ public class Room
     public Monster getMonster()
     {
         return monster;
-    }
-
-    public boolean isHasHadAnEvent()
-    {
-        return hasHadAnEvent;
-    }
-
-    public void setHasHadAnEvent(boolean hasHadAnEvent)
-    {
-        this.hasHadAnEvent = hasHadAnEvent;
     }
 
     public void setNorth(Room north)
