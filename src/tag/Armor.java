@@ -1,4 +1,3 @@
-
 package tag;
 
 import java.util.ArrayList;
@@ -9,8 +8,9 @@ import java.util.ArrayList;
  */
 public class Armor extends Item
 {
+
     private ArrayList<String> armorNames = new ArrayList<>();
-    
+
     public Armor(int tier)
     {
         armorNames.add("Leather Armor");
@@ -25,7 +25,7 @@ public class Armor extends Item
             case 2:
                 this.value = random.nextInt(40, 50);
                 this.tier = 2;
-                this.name = armorNames.get(random.nextInt(0,armorNames.size()-1));
+                this.name = armorNames.get(random.nextInt(0, armorNames.size() - 1));
                 break;
             case 3:
                 this.value = random.nextInt(60, 70);
@@ -35,23 +35,12 @@ public class Armor extends Item
             default:
                 this.value = 0;
         }
-        
-        
+
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
-    public int getValue()
-    {
-        return value;
-    }
-
-        @Override
+    @Override
     public String toString()
     {
-        return name +", armor " + value;
+        return name + ", armor " + value;
     }
 }

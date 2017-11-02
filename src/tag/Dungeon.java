@@ -15,7 +15,7 @@ public class Dungeon
 
     private TextIO io = new TextIO(new SysTextIO());
     private Player player;
-    private MovingMonster movingMonster;
+    private MovingTroll movingTroll;
     private Text catalogue = new Text();
     private ArrayList<Room> allRooms = new ArrayList<>();
     private ArrayList<Room> roomsTier1 = new ArrayList<>();
@@ -26,8 +26,8 @@ public class Dungeon
     private Room previousRoom;
     private FileIO hiscore = new FileIO();
     private RND random = new RND();
-    private final int MOVINGMONSTER_ROOM_MIN = 9;
-    private final int MOVINGMONSTER_ROOM_MAX = 19;
+    private final int MOVINGTROLL_ROOM_MIN = 9;
+    private final int MOVINGTROLL_ROOM_MAX = 19;
     private ArrayList<Item> itemsTier1 = new ArrayList<>();
     private ArrayList<Item> itemsTier2 = new ArrayList<>();
     private ArrayList<Item> itemsTier3 = new ArrayList<>();
@@ -49,16 +49,31 @@ public class Dungeon
         allRooms.add(new Room("Quitting room", "room20"));
         allRooms.add(new Room("Winning room", "room21"));
 
+        /**
+         * the following methods arrange rooms, items and monsters in tiers.
+         * rooms are given 75% chance to contain monsters, 75% chance to contain
+         * items, and 75% chance to contain gold. monsters are created to have
+         * an item which they drop if killed. also the connections(exits)
+         * between the rooms are defined.
+         */
         setRoomTiers();
         setItemTiers();
         placeMonster();
         placeItem();
         placeGold();
         setExits();
+
+        /**
+         * intro sequence. prints some info and creates player
+         */
         introSequence();
 
-        Room room = allRooms.get(random.nextInt(MOVINGMONSTER_ROOM_MIN, MOVINGMONSTER_ROOM_MAX));
-        movingMonster = new MovingMonster(room);
+        /**
+         * introduces the special moving troll, which kills the player if met -
+         * except if the player has found a certain protection amulet.
+         */
+        Room room = allRooms.get(random.nextInt(MOVINGTROLL_ROOM_MIN, MOVINGTROLL_ROOM_MAX));
+        movingTroll = new MovingTroll(room);
     }
 
     private void setRoomTiers()
@@ -269,9 +284,7 @@ public class Dungeon
 
     private void introSequence()
     {
-        /**
-         * intro sequence. creates player
-         */
+
         io.put("***** Text Adventure Game: The Abandoned Castle *****\n\n");
         io.put("HOW TO PLAY:\n"
                 + "The goal of the game is to find your way through the castle "
@@ -279,9 +292,9 @@ public class Dungeon
                 + "You start with a piece of armor and a weapon equipped, "
                 + "and with a Healing Potion in your inventory.\n"
                 + "Whenever you use a Healing Potion, you are healed to your "
-                + "maximum health. You can during the game find better armor\n"
+                + "maximum health. You can during the game\nfind better armor "
                 + "and weapons to equip, as well as you can access your inventory "
-                + "and drop some of your items if you no longer need them.\n");
+                + "and drop some\nof your items if you no longer need them.\n");
         help();
 
         String name = "";
@@ -299,8 +312,9 @@ public class Dungeon
 
     /**
      * starts game. cycles through rooms as the player enters. provides endings
-     * for success, for quitting and for dying - if success, writes player to
-     * hiscorelist and prints the list.
+     * for winning(room21), for quitting and for dying(room20, with and without
+     * health left) - if winning, writes player to hiscorelist and prints the
+     * list.
      */
     public void play()
     {
@@ -324,7 +338,8 @@ public class Dungeon
             for (int i = 0; i < hiscoreListToBePrinted.size(); i++)
             {
                 io.put((i + 1) + ". ");
-                io.put(hiscoreListToBePrinted.get(i).getName() + ", obtained " + hiscoreListToBePrinted.get(i).getGold() + " goldpieces.\n");
+                io.put(hiscoreListToBePrinted.get(i).getName() + ", obtained "
+                        + hiscoreListToBePrinted.get(i).getGold() + " goldpieces.\n");
             }
 
         } else if (player.getHealth() > 0)
@@ -333,42 +348,64 @@ public class Dungeon
                     + "overwhelmed with frenzying fear.\n\nThanks for playing!\n");
         } else
         {
-            io.put("***************** R.I.P. *****************\nThe locals will add you "
+            io.put("*************************************** R.I.P. ***************************************\n"
+                    + "The locals will add you "
                     + "to the tale of adventurers not returning from The Abandoned"
                     + " Castle.\n\nThanks for playing!\n");
         }
     }
 
     /**
-     * room event for each entered room. if current room has not earlier had an
-     * event, checks for gold, traps and items. checks if player health goes to
-     * zero. checks code entered in room 11 for escaping.
+     * room event for each entered room, with various events in each room.
      */
     private Room enter()
     {
         io.put("\n");
 
+        /**
+         * if treasure room is attempted to be entered, checks if player knows
+         * the required entrance code
+         */
         if (current.equals(allRooms.get(11)))
         {
             return checkCode();
         }
-        if (checkForMovingMonster())
 
+        /**
+         * if player meets the moving troll in the entered room, this method
+         * determines whether the player has the protection amulet(troll dies)
+         * or not(player dies).
+         */
+        if (checkForMovingTrollInCurrentRoom())
         {
             return allRooms.get(20);
         }
 
+        /**
+         * if a monster inhabits the current room, combat method is invoked. we
+         * have 3 possible outcomes of combat: either the monster dies(1), or
+         * the player dies(2), or the player runs away(3)
+         */
         if (current.getHasMonster())
         {
-            int resultOfCombat = combat();
-            if (resultOfCombat == 3)
+            if (current.equals(allRooms.get(19)))
             {
-                return previousRoom;
-            }
-            if (resultOfCombat == 2)
+                io.put("As you emerge from the seemingly endless staircase, you hear "
+                        + "an ominous rattling from the far side of the\nroom. Before you "
+                        + "even have the chance to look for an escape route, the "
+                        + current.getMonster().name + " himself is moving towards\nyou, surprisingly rapidly, "
+                        + "ready to kill! You know now that a tough battle awaits.\n\n");
+            } else
             {
-                return allRooms.get(20);
+                io.put("Before you can get a view of your surroundings, "
+                        + "you are attacked by a vicious " + current.getMonster().getName() + "!\n"
+                        + "This " + current.getMonster().name + " has " + current.getMonster().health + " health.\n\n");
             }
+            
+            Combat combat = new Combat(current.getMonster(), player);
+            
+            int resultOfCombat = combat.combat();
+
             if (resultOfCombat == 1)
             {
                 io.put("You defeated the " + current.getMonster().name + "! You gained "
@@ -385,35 +422,59 @@ public class Dungeon
                 }
                 current.setHasMonster(false);
             }
+            if (resultOfCombat == 2)
+            {
+                return allRooms.get(20);
+            }
+            if (resultOfCombat == 3)
+            {
+                return previousRoom;
+            }
         }
-
         io.put(current.getDescription());
+
+        /**
+         * here it is checked if the player enters the room containing the
+         * protection amulet. if so, player gets the amulet and the description
+         * of the room is changed to not include description of obtaining the
+         * amulet
+         */
         if (current.equals(allRooms.get(6)))
         {
             player.setAmulet(true);
+            allRooms.get(6).setDescription("A continuation of the wine cellar. Seems like a dead end.\n\n"
+                    + "North - small door");
         }
-        io.put("\n_________________________________________________________________________\n\n");
+        io.put("\n____________________________________________________________________________________________________________\n\n");
+
         isHereAnItem();
 
         previousRoom = current;
 
-        if ((current.getNorth() != null && current.getNorth().equals(movingMonster.getCurrent())
-                || current.getSouth() != null && current.getSouth().equals(movingMonster.getCurrent())
-                || current.getEast() != null && current.getEast().equals(movingMonster.getCurrent())
-                || current.getWest() != null && current.getWest().equals(movingMonster.getCurrent()))
-                && !movingMonster.isDead())
+        if (!movingTroll.isDead())
         {
-            io.put("¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨\n"
+            movingTroll.move();
+            System.out.println("Lotte er i " + movingTroll.getCurrent().getName());
+        }
+
+        if ((current.getNorth() != null && current.getNorth().equals(movingTroll.getCurrent())
+                || current.getSouth() != null && current.getSouth().equals(movingTroll.getCurrent())
+                || current.getEast() != null && current.getEast().equals(movingTroll.getCurrent())
+                || current.getWest() != null && current.getWest().equals(movingTroll.getCurrent()))
+                && !movingTroll.isDead())
+        {
+            io.put("\n¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨\n"
                     + "Listening carefully, you hear a growling coming from an adjacent room.\n"
                     + "The sound makes cold chills run down your spine.\n"
-                    + "¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨\n");
+                    + "¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨\n\n");
         }
 
         /**
          * asks user for input and uses response method to check input and
          * determine next room
          */
-        io.put("In which direction would you like to continue?");
+        io.put("In which direction would you like to continue?\n(Options are: ");
+        printAvailableExits();
         String input = io.get();
         input = input.toLowerCase();
         Room result = response(input);
@@ -423,33 +484,53 @@ public class Dungeon
             result = response(io.get().toLowerCase());
         }
 
-        if (!movingMonster.isDead())
-        {
-            movingMonster.move();
-        }
+//        if (!movingTroll.isDead())
+//        {
+//            movingTroll.move();
+//        }
         return result;
     }
 
-    private boolean checkForMovingMonster()
+    private void printAvailableExits()
     {
-        if (current.equals(movingMonster.getCurrent()) && !movingMonster.isDead())
+        ArrayList<String> availableExits = current.getExits();
+        if (availableExits.size() == 1)
+        {
+            io.put(availableExits.get(0) + ")");
+        } else
+        {
+            for (int i = 0; i < availableExits.size() - 1; i++)
+            {
+                io.put(availableExits.get(i) + ", ");
+            }
+            io.put(availableExits.get(availableExits.size() - 1) + ")");
+        }
+    }
+
+    private boolean checkForMovingTrollInCurrentRoom()
+    {
+        if (current.equals(movingTroll.getCurrent()) && !movingTroll.isDead())
         {
             if (player.hasAmulet())
             {
-                io.put("The troll is about to attack you, but suddenly freezes. It stares at the "
-                        + "pendant you are wearing, and seems to enter a state of increasing\n"
-                        + "fear. It starts to move away from you, but it's movements are strangely "
-                        + "inhibited. Before your eyes, the troll's color of skin is changing into a\n"
-                        + "stonish grey. Seconds later, the troll is nothing but a statue.\n\n"
+                io.put("As you enter the room, you hear a loud growling. You are struck with "
+                        + "fear even before you can determine the\nsource of the growling.\n"
+                        + "You never actually thought the tales of the troll to be true, but before you "
+                        + "emerges\nthe largest creature you have ever seen.\n\n"
+                        + "The troll is about to attack you, but suddenly freezes. It stares at the "
+                        + "pendant you are wearing, and seems\nto enter a state of increasing "
+                        + "fear. It starts to move away from you, but it's movements are strangely\n"
+                        + "inhibited. Before your eyes, the troll's color of skin is changing into a "
+                        + "stonish grey. Seconds later,\nthe troll is nothing but a statue.\n\n"
                         + "You can continue your quest for the treasure.\n\n");
-                movingMonster.setDead(true);
+                movingTroll.setDead(true);
             } else
             {
                 io.put("As you enter the room, you hear a loud growling. You are struck with "
                         + "fear even before you can determine the source of the growling.\n"
                         + "You never actually thought the tales of the troll to be true, but before you "
-                        + "emerges the largest creature you have ever seen. In a single strike \n"
-                        + "you are slain to the floor, mercifully losing contiousness.\n\n");
+                        + "emerges the largest creature you have ever seen.\n\nIn a single strike "
+                        + "you are slain to the floor, mercifully losing consciousness.\n\n");
                 player.setHealth(0);
                 return true;
             }
@@ -465,22 +546,22 @@ public class Dungeon
     private Room checkCode()
     {
         io.put("The door is locked. However, you notice a curious looking field "
-                + "covered in dust just next to the handle. It could be some \n"
+                + "covered in dust just next to the handle. It\ncould be some "
                 + "kind of combination lock of five letters. You wonder what to enter...\n");
         String code = io.get();
         if (code.equalsIgnoreCase("ELENA"))
         {
             io.put("\nThe lock opens with a click, and you are able to open the "
-                    + "door. It squeaks from the hinges after being locked in place for centuries.\n\n"
+                    + "door. It squeaks from the hinges after being locked\nin place for centuries.\n\n"
                     + "You enter a dark room with no windows. You feel a bit "
                     + "uncomfortable, trying to get your torch lit. Once you \n"
                     + "succeed, you are filled with expectation and a sense "
                     + "of victory by the sight that meets you. An ornamented \n"
                     + "chest sits in the center of the room, and as you open "
-                    + "it the contents glitter in the light of your newly lit torch.\n\n"
+                    + "it the contents glitter in the light of your newly\nlit torch.\n\n"
                     + "You have found the treasure.\n\nFor a long time now, the name "
                     + player.getName() + " will appear in the lore of the local villages, being the"
-                    + " first hero to ever return from The Abandoned Castle.\n\n");
+                    + " first hero to\never return from The Abandoned Castle.\n\n");
             return allRooms.get(21);
         } else
         {
@@ -490,110 +571,7 @@ public class Dungeon
         }
     }
 
-    private int combat()
-    {
 
-        if (current.equals(allRooms.get(19)))
-        {
-            io.put("As you emerge from the seemingly endless staircase, you hear "
-                    + "an ominous rattling from the far side of the room. Before you\n"
-                    + "even have the chance to look for an escape route, the "
-                    + current.getMonster().name + " himself is moving towards you, surprisingly rapidly, \n"
-                    + "ready to kill! You know now that a tough battle awaits.\n\n");
-        } else
-        {
-            io.put("Before you can get a view of your surroundings, "
-                    + "you are attacked by a vicious " + current.getMonster().getName() + "!\n"
-                    + "This " + current.getMonster().name + " has " + current.getMonster().health + " health.\n\n");
-        }
-
-        int damageToPlayer = current.getMonster().attack(player.getArmor());
-        player.setHealth(player.getHealth() - damageToPlayer);
-        io.put("Your health is down to " + player.getHealth() + "/" + player.getMaxHealth() + "!\n\n");
-        if (player.getHealth() == 0)
-        {
-            return 2;
-        }
-        while (player.getHealth() > 0 && current.getMonster().health > 0)
-        {
-
-            io.put("What would you like to do?\n\n");
-
-            ArrayList<String> options = new ArrayList<>();
-            options.add("Attack!");
-            options.add("Use Healing Potion");
-            options.add("Run away! - Takes you back to the previous room");
-
-            for (int i = 0; i < options.size(); i++)
-            {
-                io.put((i + 1) + " - " + options.get(i) + "\n");
-            }
-
-//        io.select("What would you like to do?", options, "Enter your choice:");
-            int choice = io.getInteger(1, 3);
-            if (choice == 3)
-            {
-                return 3;
-            }
-
-            {
-                switch (choice)
-                {
-                    case 1:
-                        current.getMonster().setHealth(current.getMonster().health - player.getDamage());
-                        io.put("You take a swing at the " + current.getMonster().name + "! "
-                                + "The " + current.getMonster().name + "'s health is down to "
-                                + current.getMonster().health + "!\n\n");
-                        if (current.getMonster().health == 0)
-                        {
-                            player.setLevel(player.getLevel() + 1);
-                            player.setMaxHealth(player.getMaxHealth() + 100);
-                            player.setHealth(player.getHealth() + 100);
-                            player.setBaseDamage(player.getBaseDamage() + 20);
-                            player.setDamage(player.getWeaponEquipped().value);
-
-                            return 1;
-                        }
-                        io.put("The " + current.getMonster().name + " attacks again, obviously infuriated!\n");
-                        damageToPlayer = current.getMonster().attack(player.getArmor());
-                        player.setHealth(player.getHealth() - damageToPlayer);
-                        io.put("Your health is down to " + player.getHealth() + "!\n\n");
-                        if (player.getHealth() == 0)
-                        {
-                            return 2;
-                        }
-
-                        break;
-                    case 2:
-                        ArrayList<Item> playerInventory = player.getInventory();
-                        int index = -1;
-
-                        for (int i = 0; i < playerInventory.size(); i++)
-                        {
-                            if (playerInventory.get(i).getName().equals("Healing Potion"))
-                            {
-                                index = i;
-                                player.setHealth(player.getMaxHealth());
-                                player.removeFromInventory(index);
-                                io.put("You used a Healing Potion. Your health is back to " + player.getMaxHealth() + ".\n\n");
-                                break;
-                            }
-
-                        }
-                        if (index == -1)
-                        {
-                            io.put("You don't have any Healing Potions.\n\n");
-                        }
-                        break;
-                    default:
-                    {
-                        return 3;
-                    }
-                }
-            }
-        }
-        return 3;
-    }
 
     /**
      * handles various user inputs
@@ -603,83 +581,35 @@ public class Dungeon
      */
     private Room response(String input)
     {
-        while (input.equalsIgnoreCase("i") || input.equalsIgnoreCase("help") || input.equalsIgnoreCase("stats"))
+        input = input.toLowerCase();
+        while (input.equals("i") || input.equals("help") || input.equals("stats"))
         {
-            if (input.equalsIgnoreCase("i"))
+            if (input.equals("i"))
             {
                 ArrayList<Item> inventory = player.getInventory();
-                if (inventory.size() == 0)
+                String equipOrUse = showInventory(inventory);
+                if (equipOrUse.equals("drop"))
                 {
-                    io.put("You haven't collected any items yet.\n");
+                    dropItem(inventory);
                 }
-                for (int i = 0; i < inventory.size(); i++)
+                if (equipOrUse.equals("y") || equipOrUse.equals("yes"))
                 {
-                    io.put((i + 1) + " - ");
-                    io.put(inventory.get(i).toString());
-                    io.put("\n");
-                }
-                io.put("...and " + player.getGold() + " goldpieces.\n\n");
-
-                io.put("\nType y if you would like to use or equip any of your items, "
-                        + "type 'drop' to drop a specific item and leave it in the room, "
-                        + "or type n to continue.\n");
-                String pickUp = io.get();
-                if (pickUp.equalsIgnoreCase("drop"))
-                {
-                    io.put("Enter the number of the item you would like to drop:\n");
-                    int itemSelected = io.getInteger(1, inventory.size());
-                    Item itemToDrop = inventory.get(itemSelected - 1);
-                    player.removeFromInventory(itemSelected - 1);
-                    current.setItemsInRoom(itemToDrop);
-                }
-                if (pickUp.equals("y") || pickUp.equals("yes"))
-                {
-                    io.put("Enter the number of the item to use or equip it:\n");
-
-                    int itemSelected = io.getInteger(1, inventory.size());
-                    Item itemToEquip = inventory.get(itemSelected - 1);
-
-                    if (itemToEquip.getClass().equals(Weapon.class))
-                    {
-                        player.setDamage(itemToEquip.value);
-                        io.put("You equip the " + itemToEquip.toString() + ". Your damage is now "
-                                + player.getDamage() + ".\n\n");
-                        player.removeFromInventory(itemSelected - 1);//DET ER HER
-                        player.addToInventory(player.getWeaponEquipped());
-                        player.setWeaponEquipped(itemToEquip);
-
-                    }
-                    if (itemToEquip.getClass().equals(Armor.class))
-                    {
-                        player.setArmor(itemToEquip.value);
-                        io.put("You equip the " + itemToEquip.toString() + ". Your armor is now "
-                                + player.getArmor() + ".\n\n");
-                        player.removeFromInventory(itemSelected - 1);//DET ER HER
-                        player.addToInventory(player.getArmorEquipped());
-                        player.setArmorEquipped(itemToEquip);
-                    }
-                    if (itemToEquip.getClass().equals(Potion.class))
-                    {
-                        player.setHealth(player.getMaxHealth());
-                        io.put("You use the " + itemToEquip.name.substring(0, 14) + ". Your health is now "
-                                + player.getHealth() + ".\n\n");
-                        player.removeFromInventory(itemSelected - 1);
-                    }
+                    equipOrUseItem(inventory);
                 }
 
-                io.put("_________________________________________________________________________\n");
-                io.put("In which direction would you like to continue?" + "\n");
-                input = io.get();
-                input = input.toLowerCase();
+                io.put("____________________________________________________________________________________________________________\n\n");
+                io.put("In which direction would you like to continue?\n(Options are: ");
+                printAvailableExits();
+                input = io.get().toLowerCase();
             }
-            if (input.equalsIgnoreCase("help"))
+            if (input.equals("help"))
             {
                 help();
-                io.put("In which direction would you like to continue?" + "\n");
-                input = io.get();
-                input = input.toLowerCase();
+                io.put("In which direction would you like to continue?\n(Options are: ");
+                printAvailableExits();
+                input = io.get().toLowerCase();
             }
-            if (input.equalsIgnoreCase("stats"))
+            if (input.equals("stats"))
             {
                 io.put("Player name: " + player.getName() + "\nHealth: " + player.getHealth()
                         + "\nLevel: " + player.getLevel() + "\nDamage: " + player.getDamage()
@@ -688,13 +618,17 @@ public class Dungeon
                         + "\nArmor equipped: " + player.getArmorEquipped().toString()
                         + "\n\nBase damage: " + player.getBaseDamage() + "\nMax health: "
                         + player.getMaxHealth() + "\n\n");
-                io.put("In which direction would you like to continue?" + "\n");
-                input = io.get();
-                input = input.toLowerCase();
+                io.put("In which direction would you like to continue?\n(Options are: ");
+                printAvailableExits();
+                input = io.get().toLowerCase();
 
             }
         }
+        return chooseDirection(input);
+    }
 
+    private Room chooseDirection(String input)
+    {
         switch (input)
         {
             case "quit":
@@ -715,14 +649,76 @@ public class Dungeon
                 return current.getWest();
             case "west":
                 return current.getWest();
-            case "hide":
-                return current;
             case "cheat":
                 player.setGold(200);
                 return current = allRooms.get(16);
             default:
                 return null;
         }
+    }
+
+    private void equipOrUseItem(ArrayList<Item> inventory)
+    {
+        io.put("Enter the number of the item to use or equip it:\n");
+
+        int itemSelected = io.getInteger(1, inventory.size());
+        Item itemToEquip = inventory.get(itemSelected - 1);
+
+        if (itemToEquip.getClass().equals(Weapon.class))
+        {
+            player.setDamage(itemToEquip.value);
+            io.put("You equip the " + itemToEquip.toString() + ". Your damage is now "
+                    + player.getDamage() + ".\n");
+            player.removeFromInventory(itemSelected - 1);
+            player.addToInventory(player.getWeaponEquipped());
+            player.setWeaponEquipped(itemToEquip);
+
+        }
+        if (itemToEquip.getClass().equals(Armor.class))
+        {
+            player.setArmor(itemToEquip.value);
+            io.put("You equip the " + itemToEquip.toString() + ". Your armor is now "
+                    + player.getArmor() + ".\n");
+            player.removeFromInventory(itemSelected - 1);
+            player.addToInventory(player.getArmorEquipped());
+            player.setArmorEquipped(itemToEquip);
+        }
+        if (itemToEquip.getClass().equals(Potion.class))
+        {
+            player.setHealth(player.getMaxHealth());
+            io.put("You use the " + itemToEquip.name.substring(0, 14) + ". Your health is now "
+                    + player.getHealth() + ".\n");
+            player.removeFromInventory(itemSelected - 1);
+        }
+    }
+
+    private void dropItem(ArrayList<Item> inventory)
+    {
+        io.put("Enter the number of the item you would like to drop:\n");
+        int itemSelected = io.getInteger(1, inventory.size());
+        Item itemToDrop = inventory.get(itemSelected - 1);
+        player.removeFromInventory(itemSelected - 1);
+        current.setItemsInRoom(itemToDrop);
+    }
+
+    private String showInventory(ArrayList<Item> inventory)
+    {
+        if (inventory.size() == 0)
+        {
+            io.put("You haven't collected any items yet.\n");
+        }
+        for (int i = 0; i < inventory.size(); i++)
+        {
+            io.put((i + 1) + " - ");
+            io.put(inventory.get(i).toString());
+            io.put("\n");
+        }
+        io.put("...and " + player.getGold() + " goldpieces.\n\n");
+        io.put("Type y if you would like to use or equip any of your items, "
+                + "type 'drop' to drop a specific item\nand leave it in the room, "
+                + "or type n to continue.\n");
+        String equipOrUse = io.get().toLowerCase();
+        return equipOrUse;
     }
 
     /**
@@ -762,7 +758,7 @@ public class Dungeon
                 io.put(current.getGold() + " goldpieces.\n");
             }
             io.put("\nWould you like to pick it up?\nWrite 'y' or 'yes' to pick it up.\n");
-            String pickUp = io.get();
+            String pickUp = io.get().toLowerCase();
             if (pickUp.equals("y") || pickUp.equals("yes"))
             {
                 for (Item i : newItem)
@@ -774,7 +770,7 @@ public class Dungeon
                 current.clearItems();
 
                 io.put("You added the items to your inventory.\n");
-                io.put("_________________________________________________________________________\n\n");
+                io.put("____________________________________________________________________________________________________________\n\n");
             }
         }
     }
@@ -794,9 +790,9 @@ public class Dungeon
     {
 
         @Override
-        public int compare(Player o1, Player o2)
+        public int compare(Player p1, Player p2)
         {
-            return o2.getGold() - o1.getGold();
+            return p2.getGold() - p1.getGold();
         }
 
     }

@@ -21,11 +21,7 @@ public class Monster
     protected RND random = new RND();
     protected ArrayList<String> names = new ArrayList<>();
 
-    @Override
-    public String toString()
-    {
-        return name;
-    }
+    
 
     public String getName()
     {
@@ -76,5 +72,10 @@ public class Monster
     public void setItem(Item item)
     {
         this.item = item;
+    }
+    
+    public String toString()
+    {
+        return name + " with " + health + " health, dealing " + damage + " damage.";
     }
 }

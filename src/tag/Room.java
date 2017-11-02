@@ -19,7 +19,7 @@ public class Room
     private Room south = null;
     private Room east = null;
     private Room west = null;
-    private ArrayList<String> choices = new ArrayList<>();
+    private ArrayList<String> exits = new ArrayList<>();
     private ArrayList<Item> itemsInRoom = new ArrayList<>();
     private Monster monster;
     private boolean hasMonster = false;
@@ -78,21 +78,30 @@ public class Room
     public void setNorth(Room north)
     {
         this.north = north;
+        exits.add("N");
     }
 
     public void setSouth(Room south)
     {
         this.south = south;
+        exits.add("S");
     }
 
     public void setEast(Room east)
     {
         this.east = east;
+        exits.add("E");
     }
 
     public void setWest(Room west)
     {
         this.west = west;
+        exits.add("W");
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     public String getDescription()
@@ -123,6 +132,11 @@ public class Room
     public String getName()
     {
         return name;
+    }
+
+    public ArrayList<String> getExits()
+    {
+        return exits;
     }
 
 }

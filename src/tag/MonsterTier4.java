@@ -1,4 +1,3 @@
-
 package tag;
 
 /**
@@ -17,51 +16,8 @@ public class MonsterTier4 extends Monster
     {
         this.health = random.nextInt(MIN_HEALTH, MAX_HEALTH);
         this.damage = random.nextInt(MIN_DAMAGE, MAX_DAMAGE);
-        
+
         this.name = "Skeleton King";
         this.item = item;
     }
-
-
-    public String toString()
-    {
-        return name + " with " + health + " health, dealing " + damage + " damage.";
-    }
-
-    public Item getItem()
-    {
-        return item;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public int getHealth()
-    {
-        return health;
-    }
-
-    public void setHealth(int health)
-    {
-        if (health > 0)
-        {
-            this.health = health;
-        } else
-        {
-            this.health = 0;
-        }
-    }
-
-    public int getDamage()
-    {
-        return damage;
-    }
-
-    public void setDamage(int damage)
-    {
-        this.damage = damage;
-    }
-
 }

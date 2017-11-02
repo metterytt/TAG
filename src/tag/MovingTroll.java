@@ -9,13 +9,14 @@ package tag;
  *
  * @author mette
  */
-public class MovingMonster
+public class MovingTroll
 {
+
     private RND random = new RND();
     private Room current;
     private boolean dead = false;
 
-    public MovingMonster(Room room)
+    public MovingTroll(Room room)
     {
         current = room;
     }
@@ -46,7 +47,7 @@ public class MovingMonster
             }
 
         } while (nextRoom == null || nextRoom.getName().equals("room11") || nextRoom.getName().equals("room0"));
-        System.out.println("Lotte er i "+current.getName());
+
         current = nextRoom;
     }
 
@@ -59,8 +60,6 @@ public class MovingMonster
     {
         this.dead = dead;
     }
-
-    
 
     public Room getCurrent()
     {

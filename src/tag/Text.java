@@ -15,20 +15,22 @@ public class Text
     {
         // room0
         descriptions.add("You have entered the so-called abandoned castle, "
-                + "but if the rumors are true, it might not be so. \n"
+                + "but if the rumors are true, it might not be so.\n"
+                + "Once home to a mighty king, the castle has now for "
+                + "centuries remained deserted by humans.\n"
                 + "The people of the nearby village have many stories of"
                 + " adventurers, like yourself, seeking the vast treasure \n"
-                + "rumored to be deep inside the maze-like castle. "
-                + "Every man, woman and child have their own story, but \n"
-                + "the ending is allways the same. Once you enter the castle, "
-                + "you never return.\n"
-                + "\n"
-                + "The tales of a deathly troll roaming the halls of the castle "
-                + "have not scared you. You are determined to find the treasure \n"
+                + "rumored to be deep inside the maze-like castle. Some even believe "
+                + "that the king himself haunts the castle.\n"
+                + "Every man, woman and child have their own story, but "
+                + "the ending is allways the same.\nOnce you enter the castle, "
+                + "you never return.\n\n"
+                + "The tales of a deadly troll roaming the halls of the castle "
+                + "have not scared you. You are determined to find\nthe treasure "
                 + "and return victorious. The tales speak of an amulet hidden "
-                + "somewhere deep in the castle, which possesses the magic power to\n"
+                + "somewhere deep in the castle\nwhich possesses the magic power to "
                 + "defeat the troll. Apart from the troll, several other creatures "
-                + "inhabit the ancient castle.\n\n"
+                + "inhabit\nthe ancient castle.\n\n"
                 + "The first room is a huge corridor. An old red carpet "
                 + "leads the way across the room, and ends at a big wooden \n"
                 + "gate with a grim statue of a gargoyle on each side. "
@@ -39,7 +41,7 @@ public class Text
         descriptions.add("You enter an impressive foyer, even though time "
                 + "has taken its toll on it. You notice the north wall is \n"
                 + "filled with paintings, but too dusty and faded to see the motive. "
-                + "You see two identical doors on each side of the room.\n\n"
+                + "You see two identical doors on each\nside of the room.\n\n"
                 + "South - gate\n"
                 + "West - door\n"
                 + "East - door");
@@ -62,7 +64,7 @@ public class Text
                 + "South - stairs");
         //room4
         descriptions.add("This must be the castle's wine cellar. The bottles "
-                + "and casks are covered in a thick layer of dust. You see two \n"
+                + "and casks are covered in a thick layer of dust. You see\ntwo "
                 + "doors, one normal and a smaller sized, and some stairs"
                 + " leading up.\n\n"
                 + "North - stairs\n"
@@ -70,7 +72,7 @@ public class Text
                 + "South - small door");
         //room5
         descriptions.add("A storage room, no doubt. It is filled to the brink "
-                + "with stacks of paintings, chairs, stuffed animals, and much \n"
+                + "with stacks of paintings, chairs, stuffed animals, and\nmuch"
                 + "more. One could get lost in this mess easily, but you manage"
                 + " to find a door and a staircase leading up.\n\n"
                 + "North - stairs\n"
@@ -80,7 +82,7 @@ public class Text
                 + "\nHowever, just as you are about to leave, you get the sense that "
                 + "you should search the room more closely.\n"
                 + "After budging around some empty bottles on the shelves, a small hidden "
-                + "compartment is revealed. Inside it you find a sort of necklace, \n"
+                + "compartment is revealed. Inside it,\nyou find a sort of necklace, "
                 + "several leather strips with a silver pendant attached.\n\n"
                 + "**** This must be the amulet that will protect you from the troll. ****\n\n"
                 + "Wearing the amulet fills you with a sense of power, and you are ready "
@@ -88,15 +90,15 @@ public class Text
                 + "North - small door");
         //room7
         descriptions.add("This room has the feel of a barracks, it is filled "
-                + "with bunk beds and little else. A door leads to the east, and \n"
+                + "with bunk beds and little else. A door leads to the east,\nand "
                 + "a staircase leads north.\n\n"
                 + "North - stairs\n"
                 + "East - door");
         //room8
         descriptions.add("A hallway, old armors stand facing each other in pairs"
-                + " across the hallway. You get the feeling you are being watched. \n"
+                + " across the hallway. You get the feeling you are\nbeing watched. "
                 + "You increase your pace, quickly trying to decide which way to"
-                + " go next. There are two doors and a staircase to choose from.\n\n"
+                + " go next. There are two\ndoors and a staircase to choose from.\n\n"
                 + "North - stairs\n"
                 + "East - door\n"
                 + "West - door");
@@ -104,9 +106,9 @@ public class Text
         descriptions.add("You enter what must be the mess hall. Several long"
                 + " tables make up most of the room's furnishings, although \n"
                 + "along the walls are also smaller tables in booths. You can"
-                + " almost hear the echoes of the stories that have been told \n"
+                + " almost hear the echoes of the stories that have\nbeen told "
                 + "across the tables, competing with one another in "
-                + "outrageousness. From here, stairs lead to the south, "
+                + "outrageousness. From here, stairs lead to the\nsouth, "
                 + "and a door leads to the east.\n\n"
                 + "South - stairs\n"
                 + "East - door");
@@ -133,7 +135,7 @@ public class Text
                 + "West - door");
         //room14
         descriptions.add("The balcony. You welcome the sensation of fresh air."
-                + " To go back inside, there are entrances to the west and south.\n\n"
+                + " To go back inside, there are entrances to the west\nand south.\n\n"
                 + "South - door\n"
                 + "West - door");
         //room15
@@ -144,7 +146,7 @@ public class Text
                 + "West - door");
         //room16
         descriptions.add("The master dining room. A winding staircase can be "
-                + "entered to the north, and there are also two doors leading east and \n"
+                + "entered to the north, and there are also two doors\nleading east and "
                 + "west. In the southern wall, there is a small passage.\n\n"
                 + "North - stairs\n"
                 + "South - small passage\n"
@@ -159,14 +161,14 @@ public class Text
                 + "West - stairs");
         //room18
         descriptions.add("Here is the master's chambers. Vastly furnished"
-                + " with exquisite interior, but otherwise a dead end. Stairs"
-                + " lead east.\n\n"
+                + " with exquisite interior, but otherwise a dead end. Stairs\n"
+                + "lead east.\n\n"
                 + "East - stairs");
         //room19
         descriptions.add("You have entered "
                 + "a fully equipped observatory. A majestic telescope situated \n"
                 + "in the middle of the room points towards the sky through an opening"
-                + " in the vast walls. Examining it closer, it becomes obvious \n"
+                + " in the vast walls. Examining it closer,\nit becomes obvious "
                 + "that this telescope was special to someone. An inscription reads:\n\n"
                 + "*** TO MY LOVING DAUGHTER ELENA. I WOULD GIVE YOU THE STARS IF I COULD ***\n\n"
                 + "Elena. What a pretty name, you think.\n\n"
